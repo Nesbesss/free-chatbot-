@@ -18,7 +18,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("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")  # Replace with your actual Groq API key
+bot = GroqChatBot("Your_api_key")  # Replace with your actual Groq API key
 
 html_template = """
 <!DOCTYPE html>
