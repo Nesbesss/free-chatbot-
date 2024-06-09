@@ -1,9 +1,5 @@
-
 from flask import Flask, render_template_string, request
 from groq import Groq
-import speech_recognition as sr
-import threading
-import pyttsx3
 
 app = Flask(__name__)
 
@@ -22,7 +18,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("Your_api_key")  # Replace with your actual Groq API key
+bot = GroqChatBot("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")  # Replace with your actual Groq API key
 
 html_template = """
 <!DOCTYPE html>
@@ -98,7 +94,7 @@ html_template = """
         </div>
     </div>
     <script>
-        var conversationMode = "text";
+        var conversationMode = false;
 
         function sendMessage() {
             var userMessage = document.getElementById('user-input').value;
@@ -114,6 +110,7 @@ html_template = """
             .then(response => response.json())
             .then(data => {
                 document.getElementById('chat').innerHTML += `<p>Bot: ${data.bot_response}</p>`;
+                speak(data.bot_response);
             });
         }
 
@@ -131,14 +128,31 @@ html_template = """
             recognition.onerror = function(event) {
                 console.error(event.error);
             }
+            recognition.onend = function() {
+                if (conversationMode) {
+                    startVoiceRecognition();
+                }
+            }
+        }
+
+        function speak(message) {
+            var synth = window.speechSynthesis;
+            var utterance = new SpeechSynthesisUtterance(message);
+            utterance.onend = function() {
+                if (conversationMode) {
+                    startVoiceRecognition();
+                }
+            }
+            synth.speak(utterance);
         }
 
         function toggleConversationMode() {
-            if (conversationMode === "text") {
-                conversationMode = "voice";
+            conversationMode = !conversationMode;
+            if (conversationMode) {
                 startVoiceRecognition();
+                alert("Conversation mode enabled.");
             } else {
-                conversationMode = "text";
+                alert("Conversation mode disabled.");
             }
         }
     </script>
