@@ -4,7 +4,7 @@ This project is a chatbot created with the Groq API. Follow the instructions bel
 
 
 
-## Flask&Groq for Windows&Mac
+## First install Flask&Groq for Windows&Mac
 ```sh
 pip install flask
 pip install groq
@@ -13,7 +13,7 @@ pip install groq
 pip3 install flask
 pip3 install groq
 ```
-## Installation Guide For windows 
+## Now its time for the Installation Guide For windows 
 
 ```sh
 git clone https://github.com/Nesbesss/free-chatbot-.git 
