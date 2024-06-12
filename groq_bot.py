@@ -18,7 +18,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("Your_api_key")  # Replace with your actual Groq API key
+bot = GroqChatBot("Tour_api_key")
 
 html_template = """
 <!DOCTYPE html>
@@ -30,7 +30,7 @@ html_template = """
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #e0f7fa;
             margin: 0;
             padding: 0;
             display: flex;
@@ -42,34 +42,60 @@ html_template = """
         #chat-container {
             max-width: 500px;
             width: 100%;
-            background-color: #fff;
+            background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #menu {
+            background-color: #00796b;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #menu button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        #menu button:hover {
+            color: #b2dfdb;
         }
 
         #chat-box {
             padding: 20px;
             height: 300px;
             overflow-y: auto;
+            flex: 1;
         }
 
         #controls {
             padding: 20px;
             display: flex;
             align-items: center;
+            border-top: 1px solid #ddd;
         }
 
         #user-input {
             flex: 1;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 20px;
             margin-right: 10px;
         }
 
-        button {
+        #send-button {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #00796b;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -77,24 +103,54 @@ html_template = """
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        #send-button:hover {
+            background-color: #004d40;
+        }
+
+        #calculator {
+            padding: 20px;
+            display: none;
+        }
+
+        #calculator input, #calculator button {
+            padding: 10px;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
     <div id="chat-container">
+        <div id="menu">
+            <button onclick="showChat()">Chat</button>
+            <button onclick="showCalculator()">Calculator</button>
+        </div>
         <div id="chat-box">
             <div id="chat"></div>
         </div>
         <div id="controls">
             <input type="text" id="user-input" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
-            <button onclick="toggleConversationMode()">Toggle Conversation Mode</button>
+            <button id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+        <div id="calculator">
+            <input type="text" id="calc-input" placeholder="Enter expression...">
+            <button onclick="calculate()">Calculate</button>
+            <div id="calc-result"></div>
         </div>
     </div>
     <script>
         var conversationMode = false;
+
+        function showChat() {
+            document.getElementById('chat-box').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('calculator').style.display = 'none';
+        }
+
+        function showCalculator() {
+            document.getElementById('chat-box').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('calculator').style.display = 'block';
+        }
 
         function sendMessage() {
             var userMessage = document.getElementById('user-input').value;
@@ -153,6 +209,16 @@ html_template = """
                 alert("Conversation mode enabled.");
             } else {
                 alert("Conversation mode disabled.");
+            }
+        }
+
+        function calculate() {
+            var expression = document.getElementById('calc-input').value;
+            try {
+                var result = eval(expression);
+                document.getElementById('calc-result').innerText = "Result: " + result;
+            } catch (e) {
+                document.getElementById('calc-result').innerText = "Error: Invalid Expression";
             }
         }
     </script>
