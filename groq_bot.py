@@ -8,8 +8,11 @@ class GroqChatBot:
         self.client = Groq(api_key=api_key)
         self.messages = []
 
-    def chat(self, user_message):
+    def chat(self, user_message, friendliness, language_style):
         self.messages.append({"role": "user", "content": user_message})
+        # Including friendliness and language_style in the messages to give context
+        self.messages.append({"role": "system", "content": f"Respond in a {friendliness} tone and use {language_style} language."})
+        
         chat_completion = self.client.chat.completions.create(
             messages=self.messages,
             model="llama3-70b-8192"
@@ -18,7 +21,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("Tour_api_key")
+bot = GroqChatBot("Your_api_key")
 
 html_template = """
 <!DOCTYPE html>
@@ -107,6 +110,14 @@ html_template = """
             background-color: #004d40;
         }
 
+        #settings {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
         #calculator {
             padding: 20px;
             display: none;
@@ -131,6 +142,24 @@ html_template = """
             <input type="text" id="user-input" placeholder="Type your message...">
             <button id="send-button" onclick="sendMessage()">Send</button>
         </div>
+        <div id="settings">
+            <div>
+                <label for="friendliness">Friendliness:</label>
+                <select id="friendliness">
+                    <option value="friendly">Friendly</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="formal">Formal</option>
+                </select>
+            </div>
+            <div>
+                <label for="language-style">Language Style:</label>
+                <select id="language-style">
+                    <option value="kids">Kids</option>
+                    <option value="work">Work</option>
+                    <option value="general">General</option>
+                </select>
+            </div>
+        </div>
         <div id="calculator">
             <input type="text" id="calc-input" placeholder="Enter expression...">
             <button onclick="calculate()">Calculate</button>
@@ -154,11 +183,13 @@ html_template = """
 
         function sendMessage() {
             var userMessage = document.getElementById('user-input').value;
+            var friendliness = document.getElementById('friendliness').value;
+            var languageStyle = document.getElementById('language-style').value;
             document.getElementById('user-input').value = '';
             document.getElementById('chat').innerHTML += `<p>You: ${userMessage}</p>`;
             fetch('/submit_message', {
                 method: 'POST',
-                body: JSON.stringify({ user_message: userMessage }),
+                body: JSON.stringify({ user_message: userMessage, friendliness: friendliness, language_style: languageStyle }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -232,8 +263,11 @@ def index():
 
 @app.route('/submit_message', methods=['POST'])
 def submit_message():
-    user_message = request.json['user_message']
-    bot_response = bot.chat(user_message)
+    data = request.json
+    user_message = data['user_message']
+    friendliness = data['friendliness']
+    language_style = data['language_style']
+    bot_response = bot.chat(user_message, friendliness, language_style)
     return {'user_message': user_message, 'bot_response': bot_response}
 
 if __name__ == '__main__':
