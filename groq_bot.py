@@ -20,7 +20,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("Your_api_key_here") #you can get your api key at https://console.groq.com/keys, its fully free!
+bot = GroqChatBot("Your_api_key_here") #get one at https://console.groq.com/keys, they are fully free (for now)!
 
 html_template = """
 <!DOCTYPE html>
@@ -218,6 +218,13 @@ html_template = """
                 }
             });
         }
+
+        document.getElementById('user-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
 
         function startVoiceRecognition() {
             var recognition = new webkitSpeechRecognition();
