@@ -10,7 +10,6 @@ class GroqChatBot:
 
     def chat(self, user_message, friendliness, language_style):
         self.messages.append({"role": "user", "content": user_message})
-        # Including friendliness and language_style in the messages to give context
         self.messages.append({"role": "system", "content": f"Respond in a {friendliness} tone and use {language_style} language."})
         
         chat_completion = self.client.chat.completions.create(
@@ -21,7 +20,7 @@ class GroqChatBot:
         self.messages.append({"role": "assistant", "content": bot_response})
         return bot_response
 
-bot = GroqChatBot("Your_api_key")
+bot = GroqChatBot("Your_api_key_here") #you can get your api key at https://console.groq.com/keys, its fully free!
 
 html_template = """
 <!DOCTYPE html>
@@ -127,6 +126,21 @@ html_template = """
             padding: 10px;
             margin: 5px;
         }
+
+        #speech-toggle {
+            background-color: #00796b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #speech-toggle:hover {
+            background-color: #004d40;
+        }
     </style>
 </head>
 <body>
@@ -160,6 +174,7 @@ html_template = """
                 </select>
             </div>
         </div>
+        <button id="speech-toggle" onclick="toggleSpeech()">Toggle Speech</button>
         <div id="calculator">
             <input type="text" id="calc-input" placeholder="Enter expression...">
             <button onclick="calculate()">Calculate</button>
@@ -168,6 +183,7 @@ html_template = """
     </div>
     <script>
         var conversationMode = false;
+        var speechEnabled = true;
 
         function showChat() {
             document.getElementById('chat-box').style.display = 'block';
@@ -197,7 +213,9 @@ html_template = """
             .then(response => response.json())
             .then(data => {
                 document.getElementById('chat').innerHTML += `<p>Bot: ${data.bot_response}</p>`;
-                speak(data.bot_response);
+                if (speechEnabled) {
+                    speak(data.bot_response);
+                }
             });
         }
 
@@ -241,6 +259,11 @@ html_template = """
             } else {
                 alert("Conversation mode disabled.");
             }
+        }
+
+        function toggleSpeech() {
+            speechEnabled = !speechEnabled;
+            alert(`Speech ${speechEnabled ? "enabled" : "disabled"}.`);
         }
 
         function calculate() {
