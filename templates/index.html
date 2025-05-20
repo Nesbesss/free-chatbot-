@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groq Chat Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main id="chat-container">
+        <!-- Navigation Menu -->
+        <nav id="menu">
+            <button onclick="showChat()">Chat</button>
+            <!-- <button onclick="showCalculator()">Calculator</button> --> <!-- Calculator button disabled -->
+        </nav>
+
+        <!-- Chat Area -->
+        <section id="chat-area">
+            <div id="chat-box">
+                <div id="chat"></div>
+            </div>
+            <div id="controls">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button id="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="settings">
+            <div>
+                <label for="friendliness">Friendliness:</label>
+                <select id="friendliness">
+                    <option value="friendly">Friendly</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="formal">Formal</option>
+                </select>
+            </div>
+            <div>
+                <label for="language-style">Language Style:</label>
+                <select id="language-style">
+                    <option value="kids">Kids</option>
+                    <option value="work">Work</option>
+                    <option value="general">General</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Speech Toggle -->
+        <button id="speech-toggle" onclick="toggleSpeech()">Toggle Speech</button>
+
+        <!-- Calculator -->
+        <aside id="calculator" style="display: none;"> <!-- Calculator section hidden by default -->
+            <input type="text" id="calc-input" placeholder="Enter expression...">
+            <!-- <button onclick="calculate()">Calculate</button> --> <!-- Calculate button disabled -->
+            <div id="calc-result"></div>
+        </aside>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
