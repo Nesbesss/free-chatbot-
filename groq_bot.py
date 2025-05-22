@@ -31,130 +31,226 @@ html_template = """
     <title>Groq Chat Bot</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #e0f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background: linear-gradient(to right, #83a4d4, #b6fbff); /* Gradient background */
             margin: 0;
-            padding: 0;
+            padding: 20px; /* Added padding for overall spacing */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Use min-height for better responsiveness */
+            box-sizing: border-box; /* Include padding in height calculation */
         }
 
         #chat-container {
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            /* Glassmorphism styles */
+            background: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            border-radius: 15px; /* Slightly more pronounced radius for glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Adjusted shadow for depth */
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* Important for backdrop-filter to work on children correctly */
         }
 
-        #menu {
-            background-color: #00796b;
-            color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        #menu button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        #menu button:hover {
-            color: #b2dfdb;
-        }
+        /* Menu is removed, no styles needed for #menu or #menu button */
 
         #chat-box {
-            padding: 20px;
-            height: 300px;
+            padding: 30px; /* Increased padding */
+            height: 350px; 
             overflow-y: auto;
             flex: 1;
+            background-color: transparent; /* Chat box itself should be transparent */
+            color: #333; /* Darker text for readability on light glass */
         }
 
+        /* Custom scrollbar for WebKit browsers */
+        #chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chat-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        #chat-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        #chat-box::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        #chat p { 
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: #111; /* Ensure chat text is dark and readable */
+        }
+        #chat p:first-child {
+             margin-top: 0;
+        }
+
+
         #controls {
-            padding: 20px;
+            padding: 15px 25px; 
             display: flex;
             align-items: center;
-            border-top: 1px solid #ddd;
+            /* Glassmorphism for controls bar */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            /* border-bottom-left-radius: 15px; /* Match container if it's the last element visually */
+            /* border-bottom-right-radius: 15px; */
         }
 
         #user-input {
             flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
+            padding: 12px 15px; 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            border-radius: 20px; 
             margin-right: 10px;
+            font-size: 16px; 
+            background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent input background */
+            color: #000; /* Black text for input */
         }
 
-        #send-button {
+        #user-input::placeholder {
+            color: #333; /* Darker placeholder text */
+        }
+        
+        #user-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5); /* Brighter border on focus */
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #send-button, .action-button { 
             padding: 10px 20px;
-            background-color: #00796b;
+            background-color: #007bff; /* Solid color for primary buttons to stand out */
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px; 
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        #send-button:hover {
-            background-color: #004d40;
+        #send-button:hover, .action-button:hover,
+        #send-button:focus, .action-button:focus {
+            background-color: #0056b3; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover/focus */
+        }
+        
+        .secondary-button { 
+            padding: 8px 15px;
+            background-color: rgba(108, 117, 125, 0.7); /* Slightly transparent secondary button */
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            margin-left: 10px; 
+        }
+
+        .secondary-button:hover, .secondary-button:focus {
+            background-color: rgba(84, 91, 98, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover/focus */
         }
 
         #settings {
-            padding: 20px;
+            padding: 15px 25px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #ddd;
+            /* Glassmorphism for settings area */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            color: #333; /* Darker text for settings */
+        }
+
+        #settings label {
+            margin-right: 8px;
+            font-size: 14px;
+            color: #111; /* Ensure labels are dark and readable */
+        }
+
+        #settings select {
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #000; /* Black text for select */
+        }
+        
+        #settings > div { 
+            display: flex;
+            align-items: center;
         }
 
         #calculator {
             padding: 20px;
-            display: none;
+            display: none; 
+            /* Glassmorphism for calculator area */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            color: #333; /* Darker text for calculator */
         }
 
         #calculator input, #calculator button {
             padding: 10px;
-            margin: 5px;
-        }
-
-        #speech-toggle {
-            background-color: #00796b;
-            color: #fff;
-            border: none;
+            margin: 5px 0; 
             border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+        }
+        #calculator input {
+            width: calc(100% - 22px); 
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #000; /* Black text for calculator input */
+        }
+        #calculator button {
+            background-color: #28a745; /* Keep calculate button solid green */
+            color: white;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            padding: 10px;
-            margin-top: 10px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Added transition */
+        }
+        #calculator button:hover, #calculator button:focus {
+            background-color: #1e7e34; /* Darker green on hover/focus */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover/focus */
         }
 
-        #speech-toggle:hover {
-            background-color: #004d40;
+        #calc-result {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #111; /* Ensure calc result is dark and readable */
         }
+
+        /* Removed speech-toggle styles as element is gone */
     </style>
 </head>
 <body>
     <div id="chat-container">
-        <div id="menu">
-            <button onclick="showChat()">Chat</button>
-            <button onclick="showCalculator()">Calculator</button>
-        </div>
+        <!-- Menu is removed -->
         <div id="chat-box">
             <div id="chat"></div>
         </div>
         <div id="controls">
             <input type="text" id="user-input" placeholder="Type your message...">
             <button id="send-button" onclick="sendMessage()">Send</button>
+            <button class="secondary-button" onclick="toggleCalculator()">Calculator</button> <!-- New Calculator Toggle Button -->
         </div>
         <div id="settings">
             <div>
@@ -174,7 +270,6 @@ html_template = """
                 </select>
             </div>
         </div>
-        <button id="speech-toggle" onclick="toggleSpeech()">Toggle Speech</button>
         <div id="calculator">
             <input type="text" id="calc-input" placeholder="Enter expression...">
             <button onclick="calculate()">Calculate</button>
@@ -182,19 +277,19 @@ html_template = """
         </div>
     </div>
     <script>
-        var conversationMode = false;
-        var speechEnabled = true;
-
-        function showChat() {
-            document.getElementById('chat-box').style.display = 'block';
-            document.getElementById('controls').style.display = 'flex';
-            document.getElementById('calculator').style.display = 'none';
-        }
-
-        function showCalculator() {
-            document.getElementById('chat-box').style.display = 'none';
-            document.getElementById('controls').style.display = 'none';
-            document.getElementById('calculator').style.display = 'block';
+        function toggleCalculator() { // Renamed and updated function
+            var calculator = document.getElementById('calculator');
+            var chatBox = document.getElementById('chat-box');
+            var controls = document.getElementById('controls'); // Get the controls element
+            if (calculator.style.display === 'none' || calculator.style.display === '') {
+                calculator.style.display = 'block';
+                chatBox.style.display = 'none'; 
+                controls.style.display = 'none'; // Hide controls when calculator is open
+            } else {
+                calculator.style.display = 'none';
+                chatBox.style.display = 'block'; 
+                controls.style.display = 'flex'; // Show controls (as flex) when calculator is closed
+            }
         }
 
         function sendMessage() {
@@ -213,9 +308,6 @@ html_template = """
             .then(response => response.json())
             .then(data => {
                 document.getElementById('chat').innerHTML += `<p>Bot: ${data.bot_response}</p>`;
-                if (speechEnabled) {
-                    speak(data.bot_response);
-                }
             });
         }
 
@@ -225,53 +317,6 @@ html_template = """
                 sendMessage();
             }
         });
-
-        function startVoiceRecognition() {
-            var recognition = new webkitSpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-            recognition.start();
-            recognition.onresult = function(event) {
-                var result = event.results[0][0].transcript;
-                document.getElementById('user-input').value = result;
-                sendMessage();
-            }
-            recognition.onerror = function(event) {
-                console.error(event.error);
-            }
-            recognition.onend = function() {
-                if (conversationMode) {
-                    startVoiceRecognition();
-                }
-            }
-        }
-
-        function speak(message) {
-            var synth = window.speechSynthesis;
-            var utterance = new SpeechSynthesisUtterance(message);
-            utterance.onend = function() {
-                if (conversationMode) {
-                    startVoiceRecognition();
-                }
-            }
-            synth.speak(utterance);
-        }
-
-        function toggleConversationMode() {
-            conversationMode = !conversationMode;
-            if (conversationMode) {
-                startVoiceRecognition();
-                alert("Conversation mode enabled.");
-            } else {
-                alert("Conversation mode disabled.");
-            }
-        }
-
-        function toggleSpeech() {
-            speechEnabled = !speechEnabled;
-            alert(`Speech ${speechEnabled ? "enabled" : "disabled"}.`);
-        }
 
         function calculate() {
             var expression = document.getElementById('calc-input').value;
