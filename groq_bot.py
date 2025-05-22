@@ -32,109 +32,120 @@ html_template = """
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            background: linear-gradient(to right, #83a4d4, #b6fbff); /* Gradient background */
+            background: linear-gradient(to right, #400000, #111111); /* Red/Black gradient */
             margin: 0;
-            padding: 20px; /* Added padding for overall spacing */
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Use min-height for better responsiveness */
-            box-sizing: border-box; /* Include padding in height calculation */
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: #f0f0f0; /* General light text color for the body */
         }
 
         #chat-container {
             max-width: 600px;
             width: 100%;
-            /* Glassmorphism styles */
-            background: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+            background: rgba(10, 10, 10, 0.25); /* Semi-transparent dark background */
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
-            border-radius: 15px; /* Slightly more pronounced radius for glass effect */
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Adjusted shadow for depth */
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 50, 50, 0.2); /* Subtle red border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); /* Darker shadow */
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Important for backdrop-filter to work on children correctly */
+            overflow: hidden;
         }
 
-        /* Menu is removed, no styles needed for #menu or #menu button */
-
         #chat-box {
-            padding: 30px; /* Increased padding */
+            padding: 30px;
             height: 350px; 
             overflow-y: auto;
             flex: 1;
-            background-color: transparent; /* Chat box itself should be transparent */
-            color: #333; /* Darker text for readability on light glass */
+            background-color: transparent;
+            color: #e0e0e0; /* Light text for chat box content */
         }
 
-        /* Custom scrollbar for WebKit browsers */
+        /* Custom scrollbar for WebKit browsers - Red/Black theme */
         #chat-box::-webkit-scrollbar {
             width: 8px;
         }
 
         #chat-box::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(30, 0, 0, 0.1); /* Dark red track */
             border-radius: 10px;
         }
 
         #chat-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(120, 0, 0, 0.6); /* Red thumb */
             border-radius: 10px;
         }
 
         #chat-box::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(180, 0, 0, 0.8); /* Brighter red thumb on hover */
         }
 
         #chat p { 
             margin-bottom: 10px;
             line-height: 1.5;
-            color: #111; /* Ensure chat text is dark and readable */
+            color: #f0f0f0; /* Light text for chat messages */
         }
         #chat p:first-child {
              margin-top: 0;
         }
 
+        #toggle-settings-button { /* New Settings Button Styling */
+            background-color: rgba(50, 0, 0, 0.6); /* Dark red, semi-transparent */
+            color: #f0f0f0;
+            border: 1px solid rgba(255, 80, 80, 0.4); /* Red-themed border */
+            padding: 10px 15px;
+            border-radius: 20px; /* Match other buttons */
+            cursor: pointer;
+            margin-right: 10px; /* Space between it and user-input */
+            font-size: 14px; /* Slightly smaller than send button */
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #toggle-settings-button:hover, #toggle-settings-button:focus {
+            background-color: rgba(80, 0, 0, 0.8); /* Brighter on hover/focus */
+            box-shadow: 0 2px 8px rgba(204, 0, 0, 0.25);
+        }
 
         #controls {
             padding: 15px 25px; 
             display: flex;
             align-items: center;
-            /* Glassmorphism for controls bar */
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(5, 5, 5, 0.2); /* Slightly darker semi-transparent background */
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            border-top: 1px solid rgba(255, 255, 255, 0.18);
-            /* border-bottom-left-radius: 15px; /* Match container if it's the last element visually */
-            /* border-bottom-right-radius: 15px; */
+            border-top: 1px solid rgba(255, 50, 50, 0.2); /* Subtle red border */
         }
 
         #user-input {
             flex: 1;
             padding: 12px 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.3); 
+            border: 1px solid rgba(255, 50, 50, 0.3); /* Red-themed border */
             border-radius: 20px; 
             margin-right: 10px;
             font-size: 16px; 
-            background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent input background */
-            color: #000; /* Black text for input */
+            background-color: rgba(0, 0, 0, 0.25); /* Semi-transparent black input background */
+            color: #f0f0f0; /* Light text for input */
         }
 
         #user-input::placeholder {
-            color: #333; /* Darker placeholder text */
+            color: #bbbbbb; /* Dimmer light color for placeholder */
         }
         
         #user-input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.5); /* Brighter border on focus */
-            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 80, 80, 0.5); /* Brighter red border on focus */
+            background-color: rgba(0, 0, 0, 0.3);
         }
 
         #send-button, .action-button { 
             padding: 10px 20px;
-            background-color: #007bff; /* Solid color for primary buttons to stand out */
-            color: #fff;
+            background-color: #cc0000; /* Prominent red */
+            color: #ffffff; /* White text on button */
             border: none;
             border-radius: 20px; 
             cursor: pointer;
@@ -144,53 +155,42 @@ html_template = """
 
         #send-button:hover, .action-button:hover,
         #send-button:focus, .action-button:focus {
-            background-color: #0056b3; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover/focus */
+            background-color: #ff3333; /* Brighter red on hover/focus */
+            box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3); /* Red shadow on hover/focus */
         }
         
-        .secondary-button { 
-            padding: 8px 15px;
-            background-color: rgba(108, 117, 125, 0.7); /* Slightly transparent secondary button */
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
-            margin-left: 10px; 
-        }
-
-        .secondary-button:hover, .secondary-button:focus {
-            background-color: rgba(84, 91, 98, 0.8);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover/focus */
-        }
+        /* .secondary-button styles were removed as the button was removed */
 
         #settings {
             padding: 15px 25px; 
-            display: flex;
+            display: none; /* Hidden by default */
             justify-content: space-between;
             align-items: center;
-            /* Glassmorphism for settings area */
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(5, 5, 5, 0.2); /* Consistent with controls bar */
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            border-top: 1px solid rgba(255, 255, 255, 0.18);
-            color: #333; /* Darker text for settings */
+            border-top: 1px solid rgba(255, 50, 50, 0.2); /* Subtle red border */
+            color: #f0f0f0; /* Light text for settings */
         }
 
         #settings label {
             margin-right: 8px;
             font-size: 14px;
-            color: #111; /* Ensure labels are dark and readable */
+            color: #e0e0e0; /* Light text for labels */
         }
 
         #settings select {
             padding: 8px 10px;
             border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 50, 50, 0.3); /* Red-themed border */
             font-size: 14px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #000; /* Black text for select */
+            background-color: rgba(0, 0, 0, 0.25); /* Semi-transparent black background */
+            color: #f0f0f0; /* Light text for select */
+        }
+         /* Basic styling for options for better visibility in dark themes, browser support varies */
+        #settings select option {
+            background-color: #333333; /* Dark background for options */
+            color: #f0f0f0; /* Light text for options */
         }
         
         #settings > div { 
@@ -198,47 +198,7 @@ html_template = """
             align-items: center;
         }
 
-        #calculator {
-            padding: 20px;
-            display: none; 
-            /* Glassmorphism for calculator area */
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-top: 1px solid rgba(255, 255, 255, 0.18);
-            color: #333; /* Darker text for calculator */
-        }
-
-        #calculator input, #calculator button {
-            padding: 10px;
-            margin: 5px 0; 
-            border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 14px;
-        }
-        #calculator input {
-            width: calc(100% - 22px); 
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #000; /* Black text for calculator input */
-        }
-        #calculator button {
-            background-color: #28a745; /* Keep calculate button solid green */
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Added transition */
-        }
-        #calculator button:hover, #calculator button:focus {
-            background-color: #1e7e34; /* Darker green on hover/focus */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover/focus */
-        }
-
-        #calc-result {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #111; /* Ensure calc result is dark and readable */
-        }
-
-        /* Removed speech-toggle styles as element is gone */
+        /* Calculator styles removed */
     </style>
 </head>
 <body>
@@ -248,11 +208,12 @@ html_template = """
             <div id="chat"></div>
         </div>
         <div id="controls">
+            <button id="toggle-settings-button" onclick="toggleSettings()">Settings</button> <!-- New Settings Button -->
             <input type="text" id="user-input" placeholder="Type your message...">
             <button id="send-button" onclick="sendMessage()">Send</button>
-            <button class="secondary-button" onclick="toggleCalculator()">Calculator</button> <!-- New Calculator Toggle Button -->
+            <!-- Calculator toggle button removed -->
         </div>
-        <div id="settings">
+        <div id="settings"> <!-- Ensure it's hidden by default via CSS -->
             <div>
                 <label for="friendliness">Friendliness:</label>
                 <select id="friendliness">
@@ -270,25 +231,17 @@ html_template = """
                 </select>
             </div>
         </div>
-        <div id="calculator">
-            <input type="text" id="calc-input" placeholder="Enter expression...">
-            <button onclick="calculate()">Calculate</button>
-            <div id="calc-result"></div>
-        </div>
+        <!-- Calculator HTML structure removed -->
     </div>
     <script>
-        function toggleCalculator() { // Renamed and updated function
-            var calculator = document.getElementById('calculator');
-            var chatBox = document.getElementById('chat-box');
-            var controls = document.getElementById('controls'); // Get the controls element
-            if (calculator.style.display === 'none' || calculator.style.display === '') {
-                calculator.style.display = 'block';
-                chatBox.style.display = 'none'; 
-                controls.style.display = 'none'; // Hide controls when calculator is open
+        // toggleCalculator function removed
+
+        function toggleSettings() {
+            var settingsDiv = document.getElementById('settings');
+            if (settingsDiv.style.display === 'none' || settingsDiv.style.display === '') {
+                settingsDiv.style.display = 'flex'; // Restore to its original display type
             } else {
-                calculator.style.display = 'none';
-                chatBox.style.display = 'block'; 
-                controls.style.display = 'flex'; // Show controls (as flex) when calculator is closed
+                settingsDiv.style.display = 'none';
             }
         }
 
@@ -318,15 +271,7 @@ html_template = """
             }
         });
 
-        function calculate() {
-            var expression = document.getElementById('calc-input').value;
-            try {
-                var result = eval(expression);
-                document.getElementById('calc-result').innerText = "Result: " + result;
-            } catch (e) {
-                document.getElementById('calc-result').innerText = "Error: Invalid Expression";
-            }
-        }
+        // calculate function removed
     </script>
 </body>
 </html>
